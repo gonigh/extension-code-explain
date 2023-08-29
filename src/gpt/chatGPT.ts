@@ -1,9 +1,13 @@
-import { SessionInterface } from "../type";
+import { MessageInterface, SessionInterface } from "../type";
 import { GptModelEnum, MessageRoleEnum, SceneEnum } from "../type/enums";
 import { IGPT } from "./IGpt";
 import { SessionStore } from "../store/sessionStore";
 import { EventStore } from "../store/eventStore";
 import axios from "axios";
+import { IChain } from "./chains/IChain";
+import { CodeExplainChain } from "./chains/CodeExplainChain";
+import { request } from "./request";
+import { ChatChain } from "./chains/ChatChain";
 
 export class ChatGpt implements IGPT {
 
@@ -11,40 +15,19 @@ export class ChatGpt implements IGPT {
 
     private _sesstionStore: SessionStore = SessionStore.getInstance();
 
+    private _chains:Map<string, IChain> = new Map([
+        [ChatChain.type, new ChatChain()],
+        [CodeExplainChain.type, new CodeExplainChain()]
+    ]);
+
     public chat(prompt: string): void {
-        const session = this._sesstionStore.getCurrentSession() as SessionInterface;
-        
-        let flag = true;
-        EventStore.onStop(()=>{
-            flag = false;
-        });
-        this.request(prompt).then(res => {
-            const answer = res.data.data.res;
-            if(flag){
-                EventStore.emitChunk({
-                    value: answer,
-                    finish: false
-                });
-                EventStore.emitChunkEnd();
-            }
-        }).catch(e => EventStore.emitError(new Error('请求出错')));
+        this._chains.get(ChatChain.type)?.run(prompt);
     };
 
 
     // 功能调用
     public functionChat(prompt: string, scene: SceneEnum): void {
-    }
-
-    private request(prompt: string): Promise<any> {
-        const session = this._sesstionStore.getCurrentSession() as SessionInterface;
-        const param = {
-            content:`${prompt}`,
-            source: 'homework-47-huangchenze@myhexin',
-            token: '610EE45BF-Qtc2VydmU=',
-            temperature: 0.1,
-            context: session.promptContext
-        };
-        return axios.post('https://frontend.myhexin.com/kingfisher/robot/homeworkChat', param)
+        this._chains.get(scene)?.run(prompt);
     }
 
 }
