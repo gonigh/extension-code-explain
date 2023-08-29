@@ -1,0 +1,227 @@
+body {
+    height: 100vh;
+    overflow: hidden;
+}
+html, body {
+    padding: 0;
+}
+.container {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    width: 100%;
+}
+.header-container {
+    height: 28px;
+    display: flex;
+    align-items: center;
+    padding: 0 15px;
+}
+.handle-container {
+    margin: 0 0 0 auto;
+    display: flex;
+}
+.handle-item {
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    padding: 4px 10px;
+    border-radius: 2px;
+}
+.delete-icon {
+    fill: var(--vscode-foreground);
+    margin: 0 4px 0 0;
+}
+.handle-item:hover {
+    background-color: var(--vscode-button-hoverBackground);
+}
+.chat-container {
+    flex: 1;
+    overflow: auto;
+    padding: 0 15px 20px 15px;
+}
+.chat-item {
+    padding: 15px 0;
+    border-bottom: 1px dashed #393939;
+}
+.userinfo {
+    display: flex;
+    align-items: center;
+}
+.avatar {
+    height: 28px;
+    width: 28px;
+    border-radius: 50%;
+    margin: 0 10px 0 0;
+}
+.chat-content {
+    margin: 10px 0;
+    word-break: break-word;
+}
+.control-container {
+    min-height: 50px;
+    flex-shrink: 0;
+    padding: 8px 0;
+    border-top: 1px solid #333;
+}
+.input-container {
+    display: flex;
+    align-items: end;
+    padding: 0 15px;
+}
+.input {
+    flex: 1;
+    border: 1px solid var(--vscode-input-border);
+    border-radius: 2px 0 0 2px;
+    color: var(--vscode-input-foreground);
+	background-color: var(--vscode-input-background);
+    line-height: 20px;
+    word-break: break-all;
+    white-space: wrap;
+    max-height: 160px;
+    overflow: auto;
+    padding: 6px 8px;
+    outline: none;
+}
+.send {
+    flex-shrink: 0;
+    cursor: pointer;
+	text-align: center;
+	outline: 1px solid transparent;
+	outline-offset: 2px !important;
+	color: var(--vscode-button-foreground);
+    fill: var(--vscode-button-foreground);
+	background: var(--vscode-button-background);
+    height: 32px;
+    width: 50px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+button {
+    width: 96%;
+    border-radius: 4px;
+    display: block;
+    margin: 0 auto 8px auto;
+}
+.feature-container {
+    display: flex;
+    margin: 0 0 8px 0;
+    padding: 0 15px;
+}
+.card-item {
+    padding: 4px 6px;
+    color: var(--vscode-button-secondaryForeground);
+	background: var(--vscode-button-secondaryBackground);
+    line-height: 16px;
+    border-radius: 2px;
+    cursor: pointer;
+    margin: 0 6px 0 0;
+}
+.card-item.selected {
+	color: var(--vscode-button-foreground);
+    background: var(--vscode-button-background);
+}
+.card-item:hover {
+    color: var(--vscode-button-foreground);
+    background: var(--vscode-button-background);
+}
+
+.normal-text {
+    margin: 10px 0 20px 0;
+}
+
+.spinner {
+	animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+	0% {
+		transform: rotate(0deg);
+	}
+	100% {
+		transform: rotate(360deg);
+	}
+}
+
+#loading-dom {
+	width: 100%;
+	padding: 10px 0;
+	display: flex;
+    justify-content: center;
+}
+
+pre {
+    position: relative;
+    overflow-x: auto;
+    background-color: var(--vscode-editor-background);
+    border-radius: 2px;
+    display: block;
+}
+code {
+    overflow: auto;
+    padding: 4px;
+}
+.You pre:hover>.tools-container {
+    display: none;
+}
+.You code {
+    max-height: 400px;
+}
+.tools-container {
+    position: absolute;
+    height: 26px;
+    border: 1px solid var(--vscode-input-border);
+    right: 0px;
+    top: 0px;
+    display: flex;
+    border-radius: 4px;
+    background-color: var(--vscode-button-secondaryBackground);
+}
+.tools-item {
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 24px;
+    height: 24px;
+}
+.tools-item:hover {
+    background-color: var(--vscode-button-hoverBackground);
+}
+.icon {
+    color: var(--vscode-foreground);
+    fill: var(--vscode-foreground);
+}
+.copy-success {
+    display: none;
+}
+.zan {
+    margin: 0 0 0 auto;
+}
+.ml-8 {
+    margin-left: 8px;
+}
+.pointer {
+    cursor: pointer;
+}
+.activity {
+    color: red;
+    fill: red;
+}
+.stop-stream {
+    display: block;
+    width: 100px;
+    line-height: 18px;
+    text-align: center;
+    border: 1px solid var(--vscode-button-secondaryForeground);
+    background-color: var(--vscode-button-secondaryBackground);
+    position: fixed;
+    bottom: 81px;
+    left: 50%;
+    margin-left: -50px;
+}
+.stop-stream:hover {
+    background-color: var(--vscode-button-secondaryHoverBackground);
+}

@@ -1,0 +1,5 @@
+{
+  "id": "aiAssistant.codeScanning",
+  "name": "代码扫描助手",
+  "module": "ScanningViewProvider"
+}

@@ -1,0 +1,97 @@
+body {
+	background-color: transparent;
+}
+
+.color-list {
+	list-style: none;
+	padding: 0;
+}
+
+.color-entry {
+	width: 100%;
+	display: flex;
+	margin-bottom: 0.4em;
+	border: 1px solid var(--vscode-input-border);
+}
+
+.color-preview {
+	width: 2em;
+	height: 2em;
+}
+
+.color-preview:hover {
+	outline: inset white;
+}
+
+.color-input {
+	display: block;
+	flex: 1;
+	width: 100%;
+	color: var(--vscode-input-foreground);
+	background-color: var(--vscode-input-background);
+	border: none;
+	padding: 0 0.6em;
+}
+
+.button-list {
+	display: flex;
+	flex-wrap: wrap;
+	justify-content: space-between;
+}
+
+.question {
+	width: 100%;
+	border: 1px solid var(--vscode-input-border);
+	cursor: pointer;
+	padding: 1px;
+}
+
+.question:hover {
+	background-color: var(--vscode-input-background);
+}
+
+.text-buttons {
+	display: flex;
+	padding: 2px;
+	justify-content: right;
+}
+
+.text-button {
+	background-color: transparent;
+	border: none;
+	color: var(--vscode-input-foreground);
+	text-decoration: underline;
+	cursor: pointer;
+	width: fit-content;
+}
+
+.text-button:hover {
+	background: none;
+}
+
+.code-container {
+	display: block;
+}
+
+.code-block {
+	white-space: pre-wrap;
+	font-family: monospace;
+}
+
+.disabled-button {
+	background: #666;
+	cursor: not-allowed;
+	border: none;
+	padding: var(--input-padding-vertical) var(--input-padding-horizontal);
+	margin: 2px;
+	width: 45%;
+	text-align: center;
+	outline: 1px solid transparent;
+	outline-offset: 2px !important;
+	color: #ddd;
+	float: left;
+}
+
+.disabled-button:hover {
+	background: #666;
+}
