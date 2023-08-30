@@ -26,4 +26,20 @@ export class CodeExplain {
     }
 }
 
+export class CodeScan {
+    public static readonly command = 'hipilot.code-scan';
+
+    public static run() {
+        vscode.commands.executeCommand('workbench.view.extension.chat-view');
+        EventStore.emitMessage({
+            target: 'chat-view',
+            from: 'code-scan',
+            value: {
+                type: 'function',
+                scene: SceneEnum.CODE_SCAN
+            }
+        })
+        
+    }
+}
 

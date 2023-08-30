@@ -27,3 +27,13 @@ export const getSelectCode = (): string => {
     selectedText = editor.document.getText(selection);
     return selectedText;
 }
+
+export const getFileTyle = (): string => {
+    let fileType = '';
+    const editor = vscode.window.activeTextEditor;
+    if (!editor) {
+        return '';
+    }
+    fileType = editor.document.languageId;
+    return fileType;
+}

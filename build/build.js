@@ -29,25 +29,4 @@ if (!fs.existsSync(targetDirectory)) {
   fs.mkdirSync(targetDirectory, { recursive: true });
 }
 // 使用vsce打包插件
-execSync(`cross-env NODE_ENV=${process.env.NODE_ENV} npx vsce package --out ${targetDirectory}`, { stdio: 'inherit' });
-
-const uploadContent = fs.readFileSync('UPLOAD.md', 'utf-8');
-const updates = extractUpdates(uploadContent);
-// 版本更新信息
-const versionJsonData = {
-  name: packageJson.name,
-  version: packageJson.version,
-  content: JSON.stringify(updates.find(itme=>itme.version === packageJson.version))
-};
-
-// 将 JSON 数据写入到文件
-fs.writeFileSync(`${targetDirectory}/upload.json`, JSON.stringify(versionJsonData));
-
-// 最新版本信息
-const jsonRes = {
-  status_code: 0,
-  status_msg: "",
-  data: versionJsonData
-}
-// 将 JSON 数据写入到文件
-fs.writeFileSync('./pack/upload.json', JSON.stringify(jsonRes));
+execSync(`npx vsce package --out ${targetDirectory}`, { stdio: 'inherit' });

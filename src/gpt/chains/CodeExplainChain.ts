@@ -23,6 +23,7 @@ export class CodeExplainChain implements IChain {
                 value: output,
                 finish: false
             });
+            EventStore.emitChunkEnd();
         })
     }
 }
