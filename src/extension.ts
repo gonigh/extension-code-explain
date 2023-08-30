@@ -1,7 +1,7 @@
 import * as vscode from 'vscode';
 import { ChatViewProvider } from './plugins/chatViewProvider';
 import { SessionStore } from './store/sessionStore';
-import { CodeExplain, TestUnit } from './plugins/menu';
+import { CodeExplain } from './plugins/menu';
 
 
 export function activate(context: vscode.ExtensionContext) {
@@ -17,7 +17,7 @@ export function activate(context: vscode.ExtensionContext) {
   }));
 
   // 注册右键事件
-  const menuGroup = [CodeExplain, TestUnit];
+  const menuGroup = [CodeExplain];
   menuGroup.forEach(item => {
     let disposable = vscode.commands.registerCommand(item.command, item.run);
     context.subscriptions.push(disposable);

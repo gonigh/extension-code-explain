@@ -1,8 +1,9 @@
 import { MessageInterface } from "../../type";
 import { MessageRoleEnum } from "../../type/enums";
-import { request } from "../request"
+import { strToArray } from "../../utils";
+import { request } from "../request";
 
-export const getSceneName = function (prompt: string) {
+export const getSceneName = (prompt: string): Promise<string[]> => {
     return new Promise((resolve, reject) => {
         const systemPrompt = `判断以下对话涉及的场景，场景包括代码解释、代码问题检查、代码优化这三个，
         输出涉及场景的字符串数组，
@@ -19,10 +20,8 @@ export const getSceneName = function (prompt: string) {
         let array: string[] = [];
         request(prompt, context).then(res => {
             let str = res.data.data.res;
-            str = str.replace(/[\[\]']+/g, '');
-            array = str.split(',');
+            const array = strToArray(str);
             for(let i = 0; i < array.length; i++) {
-                array[i] = array[i].trim();
                 if(array[i] !== 'code-explain' && array[i] !== 'question-scan' && array[i] !== 'code-optimization') {
                     reject([])
                 }
