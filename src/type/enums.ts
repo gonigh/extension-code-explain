@@ -9,6 +9,7 @@ export enum MessageRoleEnum {
 
 export enum SceneEnum {
     CHAT = 'chat',
-    CODE_EXPLAIN = 'code_explain',
-    TEST_UNIT = 'test_unit',
+    CODE_EXPLAIN = 'code-explain',
+    QUESTION_SCAN = 'question-scan',
+    CODE_OPTIMIZATION = 'code-optimization',
 }
