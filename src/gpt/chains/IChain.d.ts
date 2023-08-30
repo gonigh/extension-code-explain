@@ -1,3 +1,3 @@
 export interface IChain {
-    run(prompt: string): void
+    run(prompt: string): Promise<void>
 }

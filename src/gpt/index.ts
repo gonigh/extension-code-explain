@@ -1,31 +1,25 @@
-import { SessionInterface } from "../type";
-import { GptModelEnum, SceneEnum } from "../type/enums";
-import { ChatGpt } from "./chatGPT";
-import { IGPT } from "./IGpt";
+import { SceneEnum } from "../type/enums";
+import { ChatChain } from "./chains/ChatChain";
+import { CodeExplainChain } from "./chains/CodeExplainChain";
+import { IChain } from "./chains/IChain";
 
 
 export class GPT {
 
-    private _gptMap = new Map<GptModelEnum, IGPT>();
+    private _chains: Map<string, IChain> = new Map([
+        [ChatChain.type, new ChatChain()],
+        [CodeExplainChain.type, new CodeExplainChain()]
+    ]);
 
-    constructor() {
-        const gptList = [ChatGpt];
-        gptList.forEach((GPT) => {
-            this._gptMap.set(GPT.type, new GPT());
-        });
-    }
+    constructor() {}
 
     public chat(prompt: string): void {
-        const gpt: IGPT = this._gptMap.get(GptModelEnum.OPENAI) as IGPT;
-        gpt.chat(prompt);
+        this._chains.get(ChatChain.type)?.run(prompt);
 
     }
 
     public functionChat(prompt: string, scene: SceneEnum) {
-        const gpt: IGPT = this._gptMap.get(GptModelEnum.OPENAI) as IGPT;
-
-        return gpt.functionChat(prompt, scene);
-
+        this._chains.get(scene)?.run(prompt);
     }
 }
 

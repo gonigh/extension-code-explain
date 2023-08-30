@@ -1,8 +1,3 @@
-export enum GptModelEnum {
-    HX = 'hx',
-    OPENAI = 'openai'
-}
-
 export enum MessageRoleEnum {
 
     SYSTEM = 'system',
