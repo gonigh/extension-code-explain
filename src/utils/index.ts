@@ -28,7 +28,7 @@ export const getSelectCode = (): string => {
     return selectedText;
 }
 
-export const getFileTyle = (): string => {
+export const getFileType = (): string => {
     let fileType = '';
     const editor = vscode.window.activeTextEditor;
     if (!editor) {

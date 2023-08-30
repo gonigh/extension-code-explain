@@ -4,7 +4,7 @@ import { variableCheck } from "../roles/variableCheck";
 import { IChain } from "./IChain";
 
 export class CodeExplainChain implements IChain {
-    public static type: string = 'code-explain'
+    public static type: string = 'code-explain';
 
     public run(prompt: string): Promise<void> {
         return new Promise(async (resolve) => {
@@ -18,7 +18,7 @@ export class CodeExplainChain implements IChain {
             const answer: string = await explain(variableContext + prompt);
 
             // 输出格式化
-            const output = `#### 代码解释\n\n${answer}\n`;
+            const output = `- 代码解释\n\n${answer}\n`;
             EventStore.emitChunk({
                 value: output,
                 finish: false
