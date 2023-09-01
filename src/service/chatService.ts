@@ -38,12 +38,10 @@ export class ChatService implements ISercive {
                 value: string,
                 finish: boolean
             }) => {
-
                 if (postValue.value !== null) {
                     answer += postValue.value;
                 }
-                // console.log(postValue.value);
-                
+                // 每次返回一段结果都打印出来
                 if (this._streamUpdate) {
                     this._streamUpdate(ChatService.type, JSON.stringify(postValue));
                 }
@@ -54,6 +52,7 @@ export class ChatService implements ISercive {
                     finish: true
                 };
 
+                // 只有没返回结果才补充执行一次
                 if(answer === '') {
                     answer = '很抱歉，我不理解你的输入。你能提供更多关于你想要完成的事情的信息或背景吗?';
                     postValue.value = answer;
