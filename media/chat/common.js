@@ -1,182 +1,184 @@
-const APP_NAME = 'HiPilot';
-const TA_PREFIX = 'pc_web_ths_vscode_plugin';
+const APP_NAME = "HexinCopilot"
+const TA_PREFIX = "pc_web_ths_vscode_plugin"
 
 /**
  * 发送埋点
  * @param {*} arg
  */
-const sendTA = (arg) => {
-  try {
-    const base = window._vscodeEnv || {};
-    const params = Object.assign(base, typeof arg === 'string' ? { id: arg } : arg);
-    window.TA.log(params);
-  } catch (error) {
-    console.error(error);
-  }
-};
+const sendTA = arg => {
+	try {
+		const base = window._vscodeEnv || {}
+		const params = Object.assign(
+			base,
+			typeof arg === "string" ? { id: arg } : arg
+		)
+		window.TA.log(params)
+	} catch (error) {
+		console.error(error)
+	}
+}
 
 /**
  * loading组件
  */
 class LoadingComponent {
-  constructor() {
-    this.chat = null;
-  }
-  loading() {
-    const list = document.querySelector('.chat-container');
-    this.chat = document.createElement('div');
-    this.chat.classList.add('chat');
-    this.chat.classList.add('loading-main');
-    this.chat.innerHTML = `<div class="chat-item ${APP_NAME}">
-                        <div class="userinfo">
-                            <img class="avatar" src="${window._IMAGE_URLS.gptAvatar}">
-                            <span>${APP_NAME}</span>
-                        </div>
-                        <div class="chat-content">正在思考中...</div>
-                    </div>`;
-    list.appendChild(this.chat);
-    scrollToBottom();
-  }
-  remove() {
-    if (this.chat) {
-      const list = document.querySelector('.chat-container');
-      list.removeChild(this.chat);
-      this.chat = null;
-    }
-  }
+	constructor() {
+		this.chat = null
+		this.status = false
+	}
+	loading() {
+		if (!this.status) {
+			this.status = true
+			const list = document.querySelector(".chat-container")
+			this.chat = document.createElement("div")
+			this.chat.classList.add("loading")
+			list.appendChild(this.chat)
+			scrollToBottom()
+		}
+	}
+	remove() {
+		if (this.chat && this.status) {
+			const list = document.querySelector(".chat-container")
+			list.removeChild(this.chat)
+			this.chat = null
+			this.status = false
+		}
+	}
 }
 
 // 重写 marked 的 render需要的编码函数
 const escape = (html, encode) => {
-  const escapeTest = /[&<>"']/;
-  const escapeReplace = new RegExp(escapeTest.source, 'g');
-  const escapeTestNoEncode = /[<>"']|&(?!(#\d{1,7}|#[Xx][a-fA-F0-9]{1,6}|\w+);)/;
-  const escapeReplaceNoEncode = new RegExp(escapeTestNoEncode.source, 'g');
-  const escapeReplacements = {
-    '&': '&amp;',
-    '<': '&lt;',
-    '>': '&gt;',
-    '"': '&quot;',
-    "'": '&#39;',
-  };
-  const getEscapeReplacement = (ch) => escapeReplacements[ch];
-  if (encode) {
-    if (escapeTest.test(html)) {
-      return html.replace(escapeReplace, getEscapeReplacement);
-    }
-  } else {
-    if (escapeTestNoEncode.test(html)) {
-      return html.replace(escapeReplaceNoEncode, getEscapeReplacement);
-    }
-  }
+	const escapeTest = /[&<>"']/
+	const escapeReplace = new RegExp(escapeTest.source, "g")
+	const escapeTestNoEncode = /[<>"']|&(?!(#\d{1,7}|#[Xx][a-fA-F0-9]{1,6}|\w+);)/
+	const escapeReplaceNoEncode = new RegExp(escapeTestNoEncode.source, "g")
+	const escapeReplacements = {
+		"&": "&amp;",
+		"<": "&lt;",
+		">": "&gt;",
+		'"': "&quot;",
+		"'": "&#39;"
+	}
+	const getEscapeReplacement = ch => escapeReplacements[ch]
+	if (encode) {
+		if (escapeTest.test(html)) {
+			return html.replace(escapeReplace, getEscapeReplacement)
+		}
+	} else {
+		if (escapeTestNoEncode.test(html)) {
+			return html.replace(escapeReplaceNoEncode, getEscapeReplacement)
+		}
+	}
 
-  return html;
-};
+	return html
+}
 
 /**
  * 向插件发送请求
  * @param {*} value
  */
 const postReq = (value, _type, _prefix) => {
-  // 流数据正在传输中，不允许再次发送
-  if (cs.startStream) {
-    return;
-  }
-  const { type, prefix } = getSelectedItem();
-  vscode.postMessage({
-    type: _type || type,
-    value: {
-      sessionId: window.currentSessionId,
-      value,
-      prefix: _prefix || prefix,
-    },
-  });
-  sendTA(`pc_web_ths_vscode_plugin_${type}.click`);
-};
+	// 流数据正在传输中，不允许再次发送
+	if (cs.startStream) {
+		return
+	}
+	const { type, prefix } = getSelectedItem()
+	vscode.postMessage({
+		type: _type || type,
+		value: {
+			sessionId: window.currentSessionId,
+			value,
+			prefix: _prefix || prefix
+		}
+	})
+	sendTA(`pc_web_ths_vscode_plugin_${type}.click`)
+}
 
 /**
  * 滚动到底部
  */
 const scrollToBottom = () => {
-  const list = document.querySelector('.chat-container');
-  list.scrollTop = list.scrollHeight;
-};
+	const list = document.querySelector(".chat-container")
+	list.scrollTop = list.scrollHeight
+}
 
 /**
  * 获取sessionid
  */
 const getSessionId = () => {
-  vscode.postMessage({
-    type: 'session',
-    value: {
-      prefix: 'get',
-    },
-  });
-};
+	vscode.postMessage({
+		type: "session",
+		value: {
+			prefix: "get"
+		}
+	})
+}
 
 /**
  * 停止流
  */
 const stopStream = () => {
-  vscode.postMessage({
-    type: 'session',
-    value: {
-      prefix: 'stop',
-    },
-  });
-};
+	vscode.postMessage({
+		type: "session",
+		value: {
+			prefix: "stop"
+		}
+	})
+}
 
 /**
  * 处理流式消息
  */
 class ChatStream {
-  constructor() {
-    this.startStream = false;
-    this.chat = null;
-    this.message = '';
-    this.scroll = false;
-    this.scrollToBottom = true;
-    this.stopStream = false;
-    this.list = document.querySelector('.chat-container');
-    this.list.addEventListener('scroll', () => {
-      this.scroll = true;
-    });
-  }
-  run(msg, role) {
-    try {
-      this.message += msg.value.toString();
-    } catch (error) {
-      console.log(msg);
-    }
-    if (!this.startStream) {
-      // 初始化节点
-      this.startStream = true;
-      this.init(msg.value, role);
-    } else {
-      // 追加流式内容
-      this.append();
-    }
+	constructor() {
+		this.startStream = false
+		this.loadingInstance = new LoadingComponent()
+		this.chat = null
+		this.message = ""
+		this.scroll = false
+		this.scrollToBottom = true
+		this.stopStream = false
+		this.list = document.querySelector(".chat-container")
+		this.list.addEventListener("scroll", () => {
+			this.scroll = true
+		})
+	}
+	run(msg, role) {
+		try {
+			this.message += msg.value.toString()
+		} catch (error) {
+			console.log(msg)
+		}
+		if (!this.startStream) {
+			// 初始化节点
+			this.startStream = true
+			this.init(msg.value, role)
+		} else {
+			// 追加流式内容
+			this.append()
+		}
 
-    if (msg.finish) {
-      // 结束流
-      this.clear();
-      hljs.initHighlighting();
-    }
-  }
+		if (msg.finish) {
+			// 结束流
+			this.clear()
+			hljs.initHighlighting()
+		}
+	}
 
-  // 初始化节点
-  init(msg, role) {
-    const avatar = {
-      You: window._IMAGE_URLS.youAvatar,
-      HiPilot: window._IMAGE_URLS.gptAvatar,
-      hxGPT: window._IMAGE_URLS.gptAvatar,
-      InstantCoder: window._IMAGE_URLS.gptAvatar,
-    };
-    this.chat = document.createElement('div');
-    this.chat.classList.add('chat');
-    this.chat.innerHTML = `<div class="chat-item ${role}">
+	// 初始化节点
+	init(msg, role) {
+		const avatar = {
+			You: window._IMAGE_URLS.youAvatar,
+			HexinCopilot: window._IMAGE_URLS.gptAvatar,
+			hxGPT: window._IMAGE_URLS.gptAvatar,
+			InstantCoder: window._IMAGE_URLS.gptAvatar
+		}
+		const _role = role.replace(/\s*/g, "")
+		this.chat = document.createElement("div")
+		this.chat.classList.add("chat")
+		this.chat.innerHTML = `<div class="chat-item ${_role}">
                         <div class="userinfo">
-                            <img class="avatar" src="${avatar[role]}">
+                            <img class="avatar" src="${avatar[_role]}">
                             <span>${role}</span>
                             <div class="zan">
 								<svg t="1691996719070" class="icon point-like pointer" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="26470" width="18" height="18">
@@ -189,101 +191,119 @@ class ChatStream {
                         </div>
                         <div class="chat-content">${marked.parse(msg)}</div>
                         <button class="stop-stream">停止生成</button>
-                    </div>`;
-    this.list.appendChild(this.chat);
-    this.chat.addEventListener('click', (e) => {
-      this.handleClick(e, this);
-    });
-    scrollToBottom();
-  }
-  handleClick(e, that) {
-    if(e.target.classList.value === 'stop-stream') {
-      that.handleStopStrem();
-    }
-  }
-  // 停止流
-  handleStopStrem() {
-    stopStream();
-    this.stopStream = true;
-    this.deleteStopBtn();
-  }
-  // 追加流式内容
-  append() {
-    if(this.stopStream) {
-      return; 
-    }
-    this.isScrollBottom();
-    const chatEl = this.chat.querySelector('.chat-content');
-    chatEl.innerHTML = marked.parse(this.message);
-    // 没有滚动过 !this.scroll
-    // 滚动过但在底部
-    if (!this.scroll || (this.scroll && this.scrollToBottom)) {
-      scrollToBottom();
-    }
-  }
-  // 滚动条是否在底部
-  isScrollBottom() {
-    // 这里用Math.ceil为了修复vscode面板放大后导致的0.1-0.3px的像素差
-    this.scrollToBottom = Math.ceil(this.list.clientHeight + this.list.scrollTop) + 3 >= this.list.scrollHeight;
-  }
-  // 删除停止按钮
-  deleteStopBtn () {
-    if(!this.chat) {
-      return;
-    }
-    const stopBtn = this.chat.querySelector('.stop-stream');
-    if(stopBtn) {
-      stopBtn.style.display = 'none';
-    }
-  }
-  clear() {
-    this.deleteStopBtn();
-    if(this.chat) {
-      this.chat.removeEventListener('click', this.handleClick);
-      this.chat = null;
-    }
-    this.startStream = false;
-    this.message = '';
-    this.stopStream = false;
-    this.scroll = false;
-    this.list.removeEventListener('scroll', this.handleScroll);
-  }
+                    </div>`
+		this.list.appendChild(this.chat)
+		this.chat.addEventListener("click", e => {
+			this.handleClick(e, this)
+		})
+		scrollToBottom()
+	}
+	handleClick(e, that) {
+		if (e.target.classList.value === "stop-stream") {
+			that.handleStopStrem()
+		}
+	}
+	// 停止流
+	handleStopStrem() {
+		stopStream()
+		this.stopStream = true
+		this.deleteStopBtn()
+		this.loadingInstance.remove()
+	}
+	// 追加流式内容
+	append() {
+		if (this.stopStream) {
+			return
+		}
+		this.isScrollBottom()
+		const chatEl = this.chat.querySelector(".chat-content")
+		chatEl.innerHTML = marked.parse(this.message)
+		// 没有滚动过 !this.scroll
+		// 滚动过但在底部
+		if (!this.scroll || (this.scroll && this.scrollToBottom)) {
+			scrollToBottom()
+		}
+	}
+	// 滚动条是否在底部
+	isScrollBottom() {
+		// 这里用Math.ceil为了修复vscode面板放大后导致的0.1-0.3px的像素差
+		this.scrollToBottom =
+			Math.ceil(this.list.clientHeight + this.list.scrollTop) + 3 >=
+			this.list.scrollHeight
+	}
+	// 删除停止按钮
+	deleteStopBtn() {
+		if (!this.chat) {
+			return
+		}
+		const stopBtn = this.chat.querySelector(".stop-stream")
+		if (stopBtn) {
+			stopBtn.style.display = "none"
+		}
+	}
+	clear() {
+		this.deleteStopBtn()
+		this.loadingInstance.remove()
+		if (this.chat) {
+			this.chat.removeEventListener("click", this.handleClick)
+			this.chat = null
+		}
+		this.startStream = false
+		this.message = ""
+		this.stopStream = false
+		this.scroll = false
+		this.list.removeEventListener("scroll", this.handleScroll)
+	}
 }
 
 // marked初始化
-const rendererMD = new marked.Renderer();
+const rendererMD = new marked.Renderer()
 marked.setOptions({
-  renderer: rendererMD,
-  gfm: true,
-  tables: true,
-  breaks: false,
-  pedantic: false,
-  sanitize: false,
-  smartLists: true,
-  smartypants: false,
-  highlight: (code) => hljs.highlightAuto(code).value,
-});
+	renderer: rendererMD,
+	gfm: true,
+	tables: true,
+	breaks: false,
+	pedantic: false,
+	sanitize: false,
+	smartLists: true,
+	smartypants: false,
+	highlight: code => hljs.highlightAuto(code).value
+})
 // 自定义marked render用于追加复制、插入功能
 const renderer = {
-  code(code, infostring, escaped) {
-    const lang = (infostring || '').match(/\S*/)[0];
-    if (this.options.highlight) {
-      const out = this.options.highlight(code, lang);
-      if (out != null && out !== code) {
-        escaped = true;
-        code = out;
-      }
-    }
+	code(code, infostring, escaped) {
+		const lang = (infostring || "").match(/\S*/)[0]
+		if (this.options.highlight) {
+			const out = this.options.highlight(code, lang)
+			if (out != null && out !== code) {
+				escaped = true
+				code = out
+			}
+		}
 
-    code = code.replace(/\n$/, '') + '\n';
+		code = code.replace(/\n$/, "") + "\n"
 
-    const tools = getCodePreTools();
+		const tools = getCodePreTools()
 
-    if (!lang) {
-      return '<pre>' + tools + '<code>' + (escaped ? code : escape(code, true)) + '</code></pre>\n';
-    }
+		if (!lang) {
+			return (
+				"<pre>" +
+				tools +
+				"<code>" +
+				(escaped ? code : escape(code, true)) +
+				"</code></pre>\n"
+			)
+		}
 
-    return '<pre>' + tools + '<code class="' + escape(lang) + ' hljs">' + (escaped ? code : escape(code, true)) + '</code></pre>\n';
-  },
-};
-marked.use({ renderer });
+		return (
+			"<pre>" +
+			tools +
+			'<code class="' +
+			escape(lang) +
+			' hljs">' +
+			(escaped ? code : escape(code, true)) +
+			"</code></pre>\n"
+		)
+	}
+}
+marked.use({ renderer })

@@ -68,7 +68,9 @@ export class FunctionService implements ISercive {
                 if (postValue.value !== null) {
                     answer += postValue.value;
                 }
-                this._streamUpdate(FunctionService.type, JSON.stringify(postValue));
+                if (this._streamUpdate){
+                    this._streamUpdate(FunctionService.type, JSON.stringify(postValue));
+                }
             };
             const endCallback = () => {
                 const postValue = {

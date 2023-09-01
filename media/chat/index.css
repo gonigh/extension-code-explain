@@ -1,135 +1,137 @@
 body {
-    height: 100vh;
-    overflow: hidden;
+	height: 100vh;
+	overflow: hidden;
 }
-html, body {
-    padding: 0;
+html,
+body {
+	padding: 0;
 }
 .container {
-    height: 100%;
-    display: flex;
-    flex-direction: column;
-    overflow: hidden;
-    width: 100%;
+	height: 100%;
+	display: flex;
+	flex-direction: column;
+	overflow: hidden;
+	width: 100%;
 }
 .header-container {
-    height: 28px;
-    display: flex;
-    align-items: center;
-    padding: 0 15px;
+	height: 28px;
+	display: flex;
+	align-items: center;
+	padding: 0 15px;
 }
 .handle-container {
-    margin: 0 0 0 auto;
-    display: flex;
+	margin: 0 0 0 auto;
+	display: flex;
 }
 .handle-item {
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    padding: 4px 10px;
-    border-radius: 2px;
+	cursor: pointer;
+	display: flex;
+	align-items: center;
+	padding: 4px 10px;
+	border-radius: 2px;
 }
 .delete-icon {
-    fill: var(--vscode-foreground);
-    margin: 0 4px 0 0;
+	fill: var(--vscode-foreground);
+	margin: 0 4px 0 0;
 }
 .handle-item:hover {
-    background-color: var(--vscode-button-hoverBackground);
+	background-color: var(--vscode-button-hoverBackground);
 }
 .chat-container {
-    flex: 1;
-    overflow: auto;
-    padding: 0 15px 20px 15px;
+	flex: 1;
+	overflow: auto;
+	padding: 0 15px 20px 15px;
+	position: relative;
 }
 .chat-item {
-    padding: 15px 0;
-    border-bottom: 1px dashed #393939;
+	padding: 15px 0;
+	border-bottom: 1px dashed #393939;
 }
 .userinfo {
-    display: flex;
-    align-items: center;
+	display: flex;
+	align-items: center;
 }
 .avatar {
-    height: 28px;
-    width: 28px;
-    border-radius: 50%;
-    margin: 0 10px 0 0;
+	height: 28px;
+	width: 28px;
+	border-radius: 50%;
+	margin: 0 10px 0 0;
 }
 .chat-content {
-    margin: 10px 0;
-    word-break: break-word;
+	margin: 10px 0;
+	word-break: break-word;
 }
 .control-container {
-    min-height: 50px;
-    flex-shrink: 0;
-    padding: 8px 0;
-    border-top: 1px solid #333;
+	min-height: 50px;
+	flex-shrink: 0;
+	padding: 8px 0;
+	border-top: 1px solid #333;
 }
 .input-container {
-    display: flex;
-    align-items: end;
-    padding: 0 15px;
+	display: flex;
+	align-items: end;
+	padding: 0 15px;
 }
 .input {
-    flex: 1;
-    border: 1px solid var(--vscode-input-border);
-    border-radius: 2px 0 0 2px;
-    color: var(--vscode-input-foreground);
+	flex: 1;
+	border: 1px solid var(--vscode-input-border);
+	border-radius: 2px 0 0 2px;
+	color: var(--vscode-input-foreground);
 	background-color: var(--vscode-input-background);
-    line-height: 20px;
-    word-break: break-all;
-    white-space: wrap;
-    max-height: 160px;
-    overflow: auto;
-    padding: 6px 8px;
-    outline: none;
+	line-height: 20px;
+	word-break: break-all;
+	white-space: wrap;
+	max-height: 160px;
+	overflow: auto;
+	padding: 6px 8px;
+	outline: none;
 }
 .send {
-    flex-shrink: 0;
-    cursor: pointer;
+	flex-shrink: 0;
+	cursor: pointer;
 	text-align: center;
 	outline: 1px solid transparent;
 	outline-offset: 2px !important;
 	color: var(--vscode-button-foreground);
-    fill: var(--vscode-button-foreground);
+	fill: var(--vscode-button-foreground);
 	background: var(--vscode-button-background);
-    height: 32px;
-    width: 50px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
+	height: 32px;
+	width: 50px;
+	display: flex;
+	align-items: center;
+	justify-content: center;
 }
 button {
-    width: 96%;
-    border-radius: 4px;
-    display: block;
-    margin: 0 auto 8px auto;
+	width: 96%;
+	border-radius: 4px;
+	display: block;
+	margin: 0 auto 8px auto;
 }
 .feature-container {
-    display: flex;
-    margin: 0 0 8px 0;
-    padding: 0 15px;
+	display: flex;
+	margin: 0 0 8px 0;
+	padding: 0 15px;
 }
 .card-item {
-    padding: 4px 6px;
-    color: var(--vscode-button-secondaryForeground);
+	padding: 4px 6px;
+	color: var(--vscode-button-secondaryForeground);
 	background: var(--vscode-button-secondaryBackground);
-    line-height: 16px;
-    border-radius: 2px;
-    cursor: pointer;
-    margin: 0 6px 0 0;
+	line-height: 16px;
+	border-radius: 2px;
+	cursor: pointer;
+	margin: 0 6px 0 0;
 }
 .card-item.selected {
 	color: var(--vscode-button-foreground);
-    background: var(--vscode-button-background);
+	background: var(--vscode-button-background);
 }
 .card-item:hover {
-    color: var(--vscode-button-foreground);
-    background: var(--vscode-button-background);
+	color: var(--vscode-button-foreground);
+	background: var(--vscode-button-background);
 }
 
 .normal-text {
-    margin: 10px 0 20px 0;
+	margin: 10px 0 20px 0;
 }
 
 .spinner {
@@ -149,79 +151,153 @@ button {
 	width: 100%;
 	padding: 10px 0;
 	display: flex;
-    justify-content: center;
+	justify-content: center;
+}
+/* 加载状态 */
+.loading {
+	position: fixed;
+	z-index: 9999;
+	margin: auto;
+	right: 10px;
+	bottom: 50px;
+	width: 50px;
+	height: 50px;
+}
+
+.loading:before,
+.loading:after {
+	position: absolute;
+	width: 10px;
+	height: 10px;
+	content: "";
+	border-radius: 100%;
+	background-color: #0078d4;
+}
+
+.loading:before {
+	transform: translate(0, 0);
+	animation: ball-circle-before infinite 1.5s linear;
+}
+
+.loading:after {
+	transform: translate(30px, 30px);
+	animation: ball-circle-after infinite 1.5s linear;
+}
+
+@keyframes ball-circle-after {
+	0% {
+		transform: translate(30px, 30px);
+	}
+
+	25% {
+		transform: translate(0, 30px);
+	}
+
+	50% {
+		transform: translate(0, 0);
+	}
+
+	75% {
+		transform: translate(30px, 0);
+	}
+
+	100% {
+		transform: translate(30px, 30px);
+	}
+}
+
+@keyframes ball-circle-before {
+	0% {
+		transform: translate(0, 0);
+	}
+
+	25% {
+		transform: translate(30px, 0);
+	}
+
+	50% {
+		transform: translate(30px, 30px);
+	}
+
+	75% {
+		transform: translate(0, 30px);
+	}
+
+	100% {
+		transform: translate(0, 0);
+	}
 }
 
 pre {
-    position: relative;
-    overflow-x: auto;
-    background-color: var(--vscode-editor-background);
-    border-radius: 2px;
-    display: block;
+	position: relative;
+	overflow-x: auto;
+	background-color: var(--vscode-editor-background);
+	border-radius: 2px;
+	display: block;
 }
 code {
-    overflow: auto;
-    padding: 4px;
+	overflow: auto;
+	padding: 4px;
 }
-.You pre:hover>.tools-container {
-    display: none;
+pre:hover > .tools-container {
+	position: absolute;
+	height: 26px;
+	border: 1px solid var(--vscode-input-border);
+	right: 0px;
+	top: 0px;
+	display: flex;
+	border-radius: 4px;
+	background-color: var(--vscode-button-secondaryBackground);
 }
 .You code {
-    max-height: 400px;
+	max-height: 400px;
 }
 .tools-container {
-    position: absolute;
-    height: 26px;
-    border: 1px solid var(--vscode-input-border);
-    right: 0px;
-    top: 0px;
-    display: flex;
-    border-radius: 4px;
-    background-color: var(--vscode-button-secondaryBackground);
+	display: none;	
 }
 .tools-item {
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    width: 24px;
-    height: 24px;
+	cursor: pointer;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	width: 24px;
+	height: 24px;
 }
 .tools-item:hover {
-    background-color: var(--vscode-button-hoverBackground);
+	background-color: var(--vscode-button-hoverBackground);
 }
 .icon {
-    color: var(--vscode-foreground);
-    fill: var(--vscode-foreground);
+	color: var(--vscode-foreground);
+	fill: var(--vscode-foreground);
 }
 .copy-success {
-    display: none;
+	display: none;
 }
 .zan {
-    margin: 0 0 0 auto;
+	margin: 0 0 0 auto;
 }
 .ml-8 {
-    margin-left: 8px;
+	margin-left: 8px;
 }
 .pointer {
-    cursor: pointer;
+	cursor: pointer;
 }
 .activity {
-    color: red;
-    fill: red;
+	color: red;
+	fill: red;
 }
 .stop-stream {
-    display: block;
-    width: 100px;
-    line-height: 18px;
-    text-align: center;
-    border: 1px solid var(--vscode-button-secondaryForeground);
-    background-color: var(--vscode-button-secondaryBackground);
-    position: fixed;
-    bottom: 81px;
-    left: 50%;
-    margin-left: -50px;
+	display: block;
+	width: 100px;
+	line-height: 18px;
+	text-align: center;
+	border: 1px solid var(--vscode-button-secondaryForeground);
+	background-color: var(--vscode-button-secondaryBackground);
+	position: fixed;
+	bottom: 81px;
+	left: 50%;
+	margin-left: -50px;
 }
 .stop-stream:hover {
-    background-color: var(--vscode-button-secondaryHoverBackground);
+	background-color: var(--vscode-button-secondaryHoverBackground);
 }

@@ -1,102 +1,133 @@
-import * as vscode from 'vscode';
-import * as path from 'path';
-import * as fs from 'fs';
+import * as vscode from "vscode"
+import * as path from "path"
+import * as fs from "fs"
 
-import { ISercive } from '../../service/IService';
-import { ChatService } from '../../service/chatService';
-import { SessionService } from '../../service/sessionService';
-import { InsertService } from '../../service/insertService';
-import { EventStore } from '../../store/eventStore';
-import { FunctionService } from '../../service/functionService';
+import { ISercive } from "../../service/IService"
+import { ChatService } from "../../service/chatService"
+import { SessionService } from "../../service/sessionService"
+import { InsertService } from "../../service/insertService"
+import { EventStore } from "../../store/eventStore"
+import { FunctionService } from "../../service/functionService"
 
 export class ChatViewProvider implements vscode.WebviewViewProvider {
+	public static readonly viewType = "HexinCopilot.chat-view"
 
-	public static readonly viewType = 'hipilot.chat-view';
+	private _view?: vscode.WebviewView
 
-	private _view?: vscode.WebviewView;
+	private _extensionUri: vscode.Uri
 
-	private _extensionUri: vscode.Uri;
+	private _serviceMap: Map<string, ISercive> = new Map()
 
-	private _serviceMap: Map<string, ISercive> = new Map();
+	constructor(private readonly _extensionContext: vscode.ExtensionContext) {
+		this._extensionUri = _extensionContext.extensionUri
 
-
-	constructor(
-		private readonly _extensionContext: vscode.ExtensionContext,
-	) {
-		this._extensionUri = _extensionContext.extensionUri;
-		
 		// 注册需要的服务
-		const serviceList = [ChatService, SessionService, InsertService, FunctionService];
+		const serviceList = [
+			ChatService,
+			SessionService,
+			InsertService,
+			FunctionService
+		]
 		serviceList.forEach(item => {
-			this._serviceMap.set(item.type, new item());
-		});
+			this._serviceMap.set(item.type, new item())
+		})
 
 		const callback = (msg: any) => {
 			if (this._serviceMap.has(msg.value.type)) {
-				
-				const service = this._serviceMap.get(msg.value.type);
-				service?.setStreamUpdate(this._streamUpdate());
+				const service = this._serviceMap.get(msg.value.type)
+				service?.setStreamUpdate(this._streamUpdate())
 				service?.run(msg.value.scene).then(res => {
-					if(res !== ''){
-						this.postRes(1, msg.value.type, res);
+					if (res !== "") {
+						this.postRes(1, msg.value.type, res)
 					}
-				});
+				})
 			}
 		}
-		EventStore.onMessage(callback.bind(this));
+		EventStore.onMessage(callback.bind(this))
 	}
 
 	public resolveWebviewView(
 		webviewView: vscode.WebviewView,
 		context: vscode.WebviewViewResolveContext,
-		_token: vscode.CancellationToken,
+		_token: vscode.CancellationToken
 	) {
-		this._view = webviewView;
+		this._view = webviewView
 
 		webviewView.webview.options = {
 			// Allow scripts in the webview
 			enableScripts: true,
-			localResourceRoots: [
-				this._extensionUri
-			]
-		};
+			localResourceRoots: [this._extensionUri]
+		}
 
-		webviewView.webview.html = this._getHtmlForWebview(webviewView.webview);
+		webviewView.webview.html = this._getHtmlForWebview(webviewView.webview)
 
-		webviewView.webview.onDidReceiveMessage(async (data) => {
+		webviewView.webview.onDidReceiveMessage(async data => {
 			if (this._serviceMap.has(data.type)) {
-				const service = this._serviceMap.get(data.type);
-				service?.setStreamUpdate(this._streamUpdate(data.id));
-				service?.run(data.value).then(res => {
-					if(res !== ''){
-						this.postRes(1, data.type, res);
-					}
-				}).catch((err: Error) => {
-					this.postRes(1, 'error', err.message);
-				});
+				const service = this._serviceMap.get(data.type)
+				service?.setStreamUpdate(this._streamUpdate(data.id))
+				service
+					?.run(data.value)
+					.then(res => {
+						if (JSON.parse(res).value !== "") {
+							this.postRes(1, data.type, res)
+						}
+					})
+					.catch((err: Error) => {
+						this.postRes(1, "error", err.message)
+					})
 			}
-		});
+		})
 	}
 
 	private _getHtmlForWebview(webview: vscode.Webview) {
 		// Get the local path to main script run in the webview, then convert it to a uri we can use in the webview.
-		const markedUri = webview.asWebviewUri(vscode.Uri.joinPath(this._extensionUri, 'media/chat', 'marked.min.js'));
-		const commonUri = webview.asWebviewUri(vscode.Uri.joinPath(this._extensionUri, 'media/chat', 'common.js'));
-		const chatUri = webview.asWebviewUri(vscode.Uri.joinPath(this._extensionUri, 'media/chat', 'index.js'));
-		const taUri = webview.asWebviewUri(vscode.Uri.joinPath(this._extensionUri, 'media', 'ta.min.js'));
-		const highlightUri = webview.asWebviewUri(vscode.Uri.joinPath(this._extensionUri, 'media/chat', 'highlight.min.js'));
-		const messageUri = webview.asWebviewUri(vscode.Uri.joinPath(this._extensionUri, 'media/chat', 'message.js'));
+		const markedUri = webview.asWebviewUri(
+			vscode.Uri.joinPath(this._extensionUri, "media/chat", "marked.min.js")
+		)
+		const commonUri = webview.asWebviewUri(
+			vscode.Uri.joinPath(this._extensionUri, "media/chat", "common.js")
+		)
+		const chatUri = webview.asWebviewUri(
+			vscode.Uri.joinPath(this._extensionUri, "media/chat", "index.js")
+		)
+		const taUri = webview.asWebviewUri(
+			vscode.Uri.joinPath(this._extensionUri, "media", "ta.min.js")
+		)
+		const highlightUri = webview.asWebviewUri(
+			vscode.Uri.joinPath(this._extensionUri, "media/chat", "highlight.min.js")
+		)
+		const messageUri = webview.asWebviewUri(
+			vscode.Uri.joinPath(this._extensionUri, "media/chat", "message.js")
+		)
 
 		// Do the same for the stylesheet.
-		const styleResetUri = webview.asWebviewUri(vscode.Uri.joinPath(this._extensionUri, 'media', 'reset.css'));
-		const styleVSCodeUri = webview.asWebviewUri(vscode.Uri.joinPath(this._extensionUri, 'media', 'vscode.css'));
-		const styleMainUri = webview.asWebviewUri(vscode.Uri.joinPath(this._extensionUri, 'media', 'main.css'));
-		const styleChatUri = webview.asWebviewUri(vscode.Uri.joinPath(this._extensionUri, 'media/chat', 'index.css'));
-		const styleMonokaiUri = webview.asWebviewUri(vscode.Uri.joinPath(this._extensionUri, 'media/chat', 'monokai_sublime.min.css'));
-		
+		const styleResetUri = webview.asWebviewUri(
+			vscode.Uri.joinPath(this._extensionUri, "media", "reset.css")
+		)
+		const styleVSCodeUri = webview.asWebviewUri(
+			vscode.Uri.joinPath(this._extensionUri, "media", "vscode.css")
+		)
+		const styleMainUri = webview.asWebviewUri(
+			vscode.Uri.joinPath(this._extensionUri, "media", "main.css")
+		)
+		const styleChatUri = webview.asWebviewUri(
+			vscode.Uri.joinPath(this._extensionUri, "media/chat", "index.css")
+		)
+		const styleMonokaiUri = webview.asWebviewUri(
+			vscode.Uri.joinPath(
+				this._extensionUri,
+				"media/chat",
+				"monokai_sublime.min.css"
+			)
+		)
+
 		// images
-		const youAvatarUri = webview.asWebviewUri(vscode.Uri.joinPath(this._extensionUri, 'media', 'chat/images/you.png'));
-		const gptAvatarUri = webview.asWebviewUri(vscode.Uri.joinPath(this._extensionUri, 'media', 'chat/images/gpt.png'));
+		const youAvatarUri = webview.asWebviewUri(
+			vscode.Uri.joinPath(this._extensionUri, "media", "chat/images/you.png")
+		)
+		const gptAvatarUri = webview.asWebviewUri(
+			vscode.Uri.joinPath(this._extensionUri, "media", "chat/images/gpt.png")
+		)
 
 		const html = `
 		<!doctype html>
@@ -127,12 +158,12 @@ export class ChatViewProvider implements vscode.WebviewViewProvider {
 					<div class="chat-item">
 						<div class="userinfo">
 							<img class="avatar" src="${gptAvatarUri}">
-							<span>HiPilot</span>
+							<span>Hexin Copilot</span>
 						</div>
 						<div class="normal-text">试试发送一些问题给我，或者使用以下快捷功能：</div>
 						<div>
-							<button class="short-funciton">如何javascript实现数组快速排序？</button>
-							<button class="short-funciton">Vue计算属性怎么使用</button>
+							<button class="short-funciton">介绍一下React Hooks</button>
+							<button class="short-funciton">给我一个JavaScript倒计时的组件</button>
 						</div>
 					</div>
 				</div>	
@@ -161,8 +192,8 @@ export class ChatViewProvider implements vscode.WebviewViewProvider {
 		</body>
 		
 		</html>
-		`;
-		return html;
+		`
+		return html
 	}
 
 	/**
@@ -170,15 +201,13 @@ export class ChatViewProvider implements vscode.WebviewViewProvider {
 	 * @param type 功能
 	 * @param res 响应结果
 	 */
-	public postRes(id: number, type: string, value: string) {		
-		this._view?.webview.postMessage({ id, type, value });
+	public postRes(id: number, type: string, value: string) {
+		this._view?.webview.postMessage({ id, type, value })
 	}
 
-
 	private _streamUpdate(id?: number) {
-		return (type: string, value: string) => {			
-			this._view?.webview.postMessage({ id, type, value });
-		};
-
+		return (type: string, value: string) => {
+			this._view?.webview.postMessage({ id, type, value })
+		}
 	}
 }

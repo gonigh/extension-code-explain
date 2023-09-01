@@ -21,8 +21,9 @@ export class ChatChain implements IChain {
             if (flag) {
                 EventStore.emitChunk({
                     value: answer,
-                    finish: false
+                    finish: true
                 });
+                EventStore.emitChunkEnd();
             }
         })
 
